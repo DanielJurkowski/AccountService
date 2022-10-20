@@ -1,7 +1,6 @@
 package account.user;
 
 import lombok.AllArgsConstructor;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +19,6 @@ public class UserController {
         return userService.signup(userDto);
     }
 
-    @Secured({"ROLE_ACCOUNTANT", "ROLE_USER", "ROLE_ADMINISTRATOR"})
     @PostMapping("api/auth/changepass")
     public StatusDto changePass(@RequestBody @Valid PasswordDto passwordDto) {
         return userService.changePass(passwordDto);

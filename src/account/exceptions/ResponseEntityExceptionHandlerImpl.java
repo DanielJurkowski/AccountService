@@ -21,8 +21,8 @@ import java.util.Date;
 @ControllerAdvice
 public class ResponseEntityExceptionHandlerImpl extends ResponseEntityExceptionHandler {
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        String defaultMessage = ex
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        String defaultMessage = exception
                 .getBindingResult()
                 .getAllErrors()
                 .stream().findFirst()
@@ -42,13 +42,13 @@ public class ResponseEntityExceptionHandlerImpl extends ResponseEntityExceptionH
     }
 
     @Override
-    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ErrorResponse responseEntity = ErrorResponse
                 .builder()
                 .timestamp(new Date())
                 .error(status.getReasonPhrase())
                 .status(status.value())
-                .message(ex.getLocalizedMessage())
+                .message(exception.getLocalizedMessage())
                 .path(ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri().getPath())
                 .build();
 

@@ -24,7 +24,7 @@ public class PaymentMapper {
                 .collect(Collectors.toList());
     }
 
-    public PaymentDto paymentToPaymentDto(Payment payment){
+    public PaymentDto paymentToPaymentDto(Payment payment) {
         return PaymentDto
                 .builder()
                 .employee(payment.getEmployee())

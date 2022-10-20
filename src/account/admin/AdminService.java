@@ -12,25 +12,24 @@ import java.util.Locale;
 
 import static account.security.Role.ROLE_ADMINISTRATOR;
 
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
 public class AdminService {
-    private UserRepository userRepository;
+    private UserRepository userRepo;
     private UserService userService;
     private UserMapper userMapper;
 
-    public List<UserDto> getAllUsersOdderById() {
-        return userMapper.usersToUserDtos(userRepository.findAllByOrderById());
+    public List<UserDto> getAllUsersOrderById() {
+        return userMapper.usersToUserDtos(userRepo.findAllByOrderById());
     }
 
     public StatusDto deleteUserByEmail(String email) {
         User user = userService.getUserByEmailIgnoreCase(email);
 
-        if (user.getRoles().contains(ROLE_ADMINISTRATOR)) {
+        if (user.getRoles().contains(ROLE_ADMINISTRATOR))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Can't remove ADMINISTRATOR role!");
-        }
 
-        userRepository.deleteById(user.getId());
+        userRepo.deleteById(user.getId());
 
         return StatusDto
                 .builder()
@@ -42,7 +41,8 @@ public class AdminService {
     public UserDto changeUserRole(ChangeRoleDto changeRoleDto) {
         final User user = userService.getUserByEmailIgnoreCase(changeRoleDto.getUser());
         final List<Role> roles = user.getRoles();
-        final Role role = Role.roleFromString("ROLE_" + changeRoleDto.getRole().toUpperCase(Locale.ROOT))
+        final Role role = Role
+                .roleFromString("ROLE_" + changeRoleDto.getRole().toUpperCase(Locale.ROOT))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role not found!"));
 
         switch (changeRoleDto.getOperation()) {
@@ -51,7 +51,7 @@ public class AdminService {
                     break;
                 }
                 if (role == ROLE_ADMINISTRATOR || roles.contains(ROLE_ADMINISTRATOR)) {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The user cannot combine administrative and business roles");
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The user cannot combine administrative and business roles!");
                 }
                 user.getRoles().add(role);
             }
@@ -69,6 +69,6 @@ public class AdminService {
             }
         }
 
-        return userMapper.userToUserDto(userRepository.save(user));
+        return userMapper.userToUserDto(userRepo.save(user));
     }
 }

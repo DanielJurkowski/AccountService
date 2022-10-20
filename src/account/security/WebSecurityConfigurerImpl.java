@@ -40,54 +40,28 @@ public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
                 .httpBasic();
 
         http
-                .csrf().disable();
-
-        http
-                .headers().frameOptions().disable();
-
-        http
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        http
+                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
+                .and()
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
 
         http
-                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
+                .csrf().disable().headers().frameOptions().disable();
 
         http
-
                 .authorizeRequests()
-                .mvcMatchers(HttpMethod.POST, "api/auth/signup", "/**").permitAll();
-//                .mvcMatchers("api/auth/changepass").hasAnyAuthority(ROLE_USER.name(), ROLE_ACCOUNTANT.name(), ROLE_ADMINISTRATOR.name())
-//                .mvcMatchers("api/empl/payment").hasAnyAuthority(ROLE_USER.name(), ROLE_ACCOUNTANT.name())
-//                .mvcMatchers("api/acct/payments").hasAuthority(ROLE_ACCOUNTANT.name())
-//                .mvcMatchers("api/admin/**").hasAuthority(ROLE_ADMINISTRATOR.name());
+                .mvcMatchers(HttpMethod.POST, "/api/auth/signup").permitAll()
+                .mvcMatchers("/h2-console/**").permitAll()
+                .mvcMatchers(HttpMethod.POST, "/api/auth/changepass/**").hasAnyAuthority("ROLE_USER", "ROLE_ACCOUNTANT", "ROLE_ADMINISTRATOR")
+                .mvcMatchers(HttpMethod.GET, "/api/empl/payment/**").hasAnyAuthority("ROLE_USER", "ROLE_ACCOUNTANT")
+                .mvcMatchers(HttpMethod.POST, "/api/acct/payments/**").hasAuthority("ROLE_ACCOUNTANT")
+                .mvcMatchers(HttpMethod.PUT, "/api/acct/payments/**").hasAuthority("ROLE_ACCOUNTANT")
+                .mvcMatchers(HttpMethod.PUT, "/api/admin/user/role/**").hasAuthority("ROLE_ADMINISTRATOR")
+                .mvcMatchers(HttpMethod.DELETE, "/api/admin/user/**").hasAuthority("ROLE_ADMINISTRATOR")
+                .mvcMatchers(HttpMethod.GET, "/api/admin/user/**").hasAuthority("ROLE_ADMINISTRATOR");
 
-
-//        http
-//                .authorizeRequests()
-//                .antMatchers(HttpMethod.POST, "api/auth/changepass").hasAnyAuthority(ROLE_USER.name(), ROLE_ACCOUNTANT.name(), ROLE_ADMINISTRATOR.name())
-//                .and()
-//                .authorizeRequests()
-//                .antMatchers(HttpMethod.GET, "api/empl/payment").hasAnyAuthority(ROLE_USER.name(), ROLE_ACCOUNTANT.name())
-//                .and()
-//                .authorizeRequests()
-//                .antMatchers(HttpMethod.POST, "api/acct/payments").hasAnyAuthority(ROLE_ACCOUNTANT.name())
-//                .and()
-//                .authorizeRequests()
-//                .antMatchers(HttpMethod.PUT, "api/acct/payments").hasAnyAuthority(ROLE_ACCOUNTANT.name())
-//                .and()
-//                .authorizeRequests()
-//                .antMatchers(HttpMethod.GET, "api/admin/user").hasAnyAuthority(ROLE_ADMINISTRATOR.name())
-//                .and()
-//                .authorizeRequests()
-//                .antMatchers(HttpMethod.DELETE, "api/admin/user").hasAnyAuthority(ROLE_ADMINISTRATOR.name())
-//                .and()
-//                .authorizeRequests()
-//                .antMatchers(HttpMethod.PUT, "api/admin/user/role").hasAnyAuthority(ROLE_ADMINISTRATOR.name())
-//                .and()
-//                .authorizeRequests()
-//                .antMatchers(HttpMethod.POST, "api/auth/signup", "/**").permitAll();
+        http
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     @Bean
