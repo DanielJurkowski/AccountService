@@ -3,6 +3,7 @@ package account.payment;
 import lombok.AllArgsConstructor;
 import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,21 +18,26 @@ import java.util.List;
 public class PaymentController {
     private PaymentService paymentService;
 
+    @Secured("ROLE_ACCOUNTANT")
     @PostMapping("api/acct/payments")
     public StatusDto addPayments(@RequestBody @UniqueElements List<@Valid PaymentDto> payments) {
         return paymentService.addPayments(payments);
     }
 
+    @Secured("ROLE_ACCOUNTANT")
     @PutMapping("api/acct/payments")
     public StatusDto updatePayments(@RequestBody @Valid PaymentDto paymentDto) {
         return paymentService.updatePayment(paymentDto);
     }
 
+    @Secured({"ROLE_ACCOUNTANT", "ROLE_USER"})
     @GetMapping("api/empl/payment")
     public Object getPayment(@RequestParam(required = false) @DateTimeFormat(pattern = "MM-yyyy") Calendar period) {
         if (period != null) {
             return paymentService.getCurrentEmployeeDataByPeriod(calendarToYearMonth(period));
-        } else {
+        }
+
+        else {
             return paymentService.getAllCurrentEmployeeData();
         }
     }

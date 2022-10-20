@@ -56,13 +56,13 @@ public class ResponseEntityExceptionHandlerImpl extends ResponseEntityExceptionH
     }
 
     @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ErrorResponse responseEntity = ErrorResponse
                 .builder()
                 .timestamp(new Date())
                 .error(status.getReasonPhrase())
                 .status(status.value())
-                .message(ex.getLocalizedMessage())
+                .message(exception.getLocalizedMessage())
                 .path(ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri().getPath())
                 .build();
 

@@ -1,15 +1,14 @@
 package account.user;
 
+import account.security.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigInteger;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,4 +24,7 @@ public class User {
     private String lastName;
     private String email;
     private String password;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @OrderBy
+    private List<Role> roles;
 }

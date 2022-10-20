@@ -1,5 +1,7 @@
 package account.security;
 
+import account.exceptions.AccessDeniedHandlerImpl;
+import account.exceptions.AuthenticationEntryPointImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -15,6 +17,8 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 @AllArgsConstructor
 public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
     private UserDetailsServiceImpl userDetailsService;
+    private AccessDeniedHandlerImpl accessDeniedHandler;
+    private AuthenticationEntryPointImpl authenticationEntryPoint;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -24,8 +28,8 @@ public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
 
         auth
                 .inMemoryAuthentication()
-                .withUser("Admin")
-                .password("Hardcoded")
+                .withUser("admin")
+                .password("admin")
                 .roles()
                 .and().passwordEncoder(NoOpPasswordEncoder.getInstance());
     }
@@ -45,21 +49,45 @@ public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http
+                .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
+
+        http
+                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint);
+
+        http
+
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "api/auth/signup", "api/acct/payments").permitAll()
-                .and()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.PUT, "api/acct/payments").authenticated()
-                // manage access for authenticated users
-                .and()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/api/empl/payment").authenticated()
-                .and()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/auth/changepass").authenticated()
-                .and()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.PUT, "/api/empl/payments").authenticated();
+                .mvcMatchers(HttpMethod.POST, "api/auth/signup", "/**").permitAll();
+//                .mvcMatchers("api/auth/changepass").hasAnyAuthority(ROLE_USER.name(), ROLE_ACCOUNTANT.name(), ROLE_ADMINISTRATOR.name())
+//                .mvcMatchers("api/empl/payment").hasAnyAuthority(ROLE_USER.name(), ROLE_ACCOUNTANT.name())
+//                .mvcMatchers("api/acct/payments").hasAuthority(ROLE_ACCOUNTANT.name())
+//                .mvcMatchers("api/admin/**").hasAuthority(ROLE_ADMINISTRATOR.name());
+
+
+//        http
+//                .authorizeRequests()
+//                .antMatchers(HttpMethod.POST, "api/auth/changepass").hasAnyAuthority(ROLE_USER.name(), ROLE_ACCOUNTANT.name(), ROLE_ADMINISTRATOR.name())
+//                .and()
+//                .authorizeRequests()
+//                .antMatchers(HttpMethod.GET, "api/empl/payment").hasAnyAuthority(ROLE_USER.name(), ROLE_ACCOUNTANT.name())
+//                .and()
+//                .authorizeRequests()
+//                .antMatchers(HttpMethod.POST, "api/acct/payments").hasAnyAuthority(ROLE_ACCOUNTANT.name())
+//                .and()
+//                .authorizeRequests()
+//                .antMatchers(HttpMethod.PUT, "api/acct/payments").hasAnyAuthority(ROLE_ACCOUNTANT.name())
+//                .and()
+//                .authorizeRequests()
+//                .antMatchers(HttpMethod.GET, "api/admin/user").hasAnyAuthority(ROLE_ADMINISTRATOR.name())
+//                .and()
+//                .authorizeRequests()
+//                .antMatchers(HttpMethod.DELETE, "api/admin/user").hasAnyAuthority(ROLE_ADMINISTRATOR.name())
+//                .and()
+//                .authorizeRequests()
+//                .antMatchers(HttpMethod.PUT, "api/admin/user/role").hasAnyAuthority(ROLE_ADMINISTRATOR.name())
+//                .and()
+//                .authorizeRequests()
+//                .antMatchers(HttpMethod.POST, "api/auth/signup", "/**").permitAll();
     }
 
     @Bean
