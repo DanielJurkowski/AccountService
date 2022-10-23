@@ -6,11 +6,11 @@ One of the projects created as part of the "**Java Backend Developer**" course o
 - the creation of web applications using the Spring Boot framework and commonly used libraries
 - the use of a version control system, build tools like Gradle and familiarisation with the IntelliJ IDEA IDE.
 
-#### About the project:
+### About the project:
 
 >Companies send out payrolls to employees using corporate mail. This solution has certain disadvantages related to security and usability. In this project, put on a robe of such an employee. As you're familiar with Java and Spring Framework, you've suggested an idea of sending payrolls to the employee's account on the corporate website. The management has approved your idea, but it will be you who will implement this project. You've decided to start by developing the API structure, then define the role model, implement the business logic, and, of course, ensure the security of the service.
 
-#### Functions of the service:
+### Functions of the service:
 *__Authentication functionality__*:
 - **POST api/auth/signup** allows the user to register on the service
 - **POST api/auth/changepass** changes a user password
@@ -44,7 +44,7 @@ One of the projects created as part of the "**Java Backend Developer**" course o
 | PUT api/admin/user/access | - | - | - | + | - |
 | GET api/security/events | - | - | - | - | + |
 
-#### JSON bodies for POST/PUT requests:
+### JSON bodies for POST/PUT requests:
 *__POST api/auth/signup__*:
 ```yaml
 {
