@@ -3,7 +3,7 @@
 One of the projects created as part of the "**Java Backend Developer**" course on the Jetbrains Academy platform. During this course, we are introduced to:
 - object-oriented programming in Java,
 - the use of a databases,
-- the creation of web applications using the Spring Boot framework and commonly used libraries
+- the creation of web applications using the Spring Boot framework and commonly used libraries,
 - the use of a version control system, build tools like Gradle and familiarisation with the IntelliJ IDEA IDE.
 
 ### About the project:
